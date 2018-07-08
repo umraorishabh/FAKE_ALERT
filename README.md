@@ -37,3 +37,7 @@ The file name for the predictions can be changed in section '# Set file names' a
 * [Astitva Singh] - Academic supervision
 * [Mohd. Bilal] - advice
 * [Yash Chaudhary] - advice
+
+
+
+ppt: https://drive.google.com/open?id=13CGTu6zFISdkrs0OZaiyhfpUKETL7bz9
