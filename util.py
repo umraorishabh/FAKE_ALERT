@@ -8,8 +8,6 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 import tensorflow as tf
 
-
-# Initialise global variables
 label_ref = {'agree': 0, 'disagree': 1, 'discuss': 2, 'unrelated': 3}
 label_ref_rev = {0: 'agree', 1: 'disagree', 2: 'discuss', 3: 'unrelated'}
 stop_words = [
@@ -39,8 +37,8 @@ stop_words = [
         "wherever", "whether", "which", "while", "whither", "who", "whoever", "whole", "whom", "whose", "why", "will",
         "with", "within", "without", "would", "yet", "you", "your", "yours", "yourself", "yourselves"
         ]
+
 		
-# Define data class
 class FakeNewsData:
 
     def __init__(self, file_instances, file_bodies):
@@ -89,7 +87,6 @@ def pipeline_train(train, test, lim_unigram):
 
     """
 
-    # Initialise
     heads = []
     heads_track = {}
     bodies = []
@@ -130,21 +127,16 @@ def pipeline_train(train, test, lim_unigram):
             test_bodies_track[body_id] = 1
             test_body_ids.append(body_id)
 
-    # Create reference dictionary
     for i, elem in enumerate(heads + body_ids):
         id_ref[elem] = i
 
-    # Create vectorizers and BOW and TF arrays for train set
-    bow_vectorizer = CountVectorizer(max_features=lim_unigram, stop_words=stop_words)
-    bow = bow_vectorizer.fit_transform(heads + bodies)  # Train set only
+   bow_vectorizer = CountVectorizer(max_features=lim_unigram, stop_words=stop_words)
+    bow = bow_vectorizer.fit_transform(heads + bodies)
 
     tfreq_vectorizer = TfidfTransformer(use_idf=False).fit(bow)
-    tfreq = tfreq_vectorizer.transform(bow).toarray()  # Train set only
+    tfreq = tfreq_vectorizer.transform(bow).toarray()
 
-    tfidf_vectorizer = TfidfVectorizer(max_features=lim_unigram, stop_words=stop_words).\
-        fit(heads + bodies + test_heads + test_bodies)  # Train and test sets
-
-    # Process train set
+    tfidf_vectorizer = TfidfVectorizer(max_features=lim_unigram, stop_words=stop_words).fit(heads + bodies + test_heads + test_bodies)
     for instance in train.instances:
         head = instance['Headline']
         body_id = instance['Body ID']
@@ -189,13 +181,11 @@ def pipeline_test(test, bow_vectorizer, tfreq_vectorizer, tfidf_vectorizer):
 
     """
 
-    # Initialise
     test_set = []
     heads_track = {}
     bodies_track = {}
     cos_track = {}
 
-    # Process test set
     for instance in test.instances:
         head = instance['Headline']
         body_id = instance['Body ID']
@@ -226,10 +216,13 @@ def pipeline_test(test, bow_vectorizer, tfreq_vectorizer, tfidf_vectorizer):
     return test_set
 	
 
+
 def load_model(sess):
 
     saver = tf.train.Saver()
     saver.restore(sess, './model/model.checkpoint')
+	
+
 	
 def save_predictions(pred, file):
 
